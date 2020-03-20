@@ -16,7 +16,7 @@ const locationValidator = Joi.object()
       .max(90)
       .required()
     ]).required()
-  }).required()
+  })//.required()
 
 const chatroomValidator = Joi.object().keys({
   name: Joi.string()
