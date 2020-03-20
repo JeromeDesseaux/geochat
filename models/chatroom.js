@@ -6,7 +6,8 @@ const ObjectId = mongoose.Types.ObjectId;
 const chatroomRequest = new Schema({
     user: {
         type: ObjectId,
-        required: true
+        required: true,
+        ref: "User",
     },
     message: String,
     status: {
@@ -31,15 +32,28 @@ const chatroomMessage = new Schema({
 const chatroomSchema = new Schema({
     name: {
         type: String,
-        required: true
+        required: true,
+        maxlength: 60,
+        unique: true
     },
     admin: {
         type: ObjectId,
+        ref: "User",
         required: true
     },
     participants: [chatroomRequest],
-    messages: [chatroomMessage]
-
+    messages: [chatroomMessage],
+    location: {
+        type: {
+            type: String, 
+            enum: ['Point'],
+            required: true
+        },
+        coordinates: {
+            type: [Number],
+            required: true
+        }
+    }
 }, {
     timestamps: true
 });

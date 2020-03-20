@@ -1,13 +1,29 @@
 import express from 'express';
-import chatroomRouter from './routes/chatroom';
+import logger from "morgan";
+import bodyParser from "body-parser";
+import chatroomRouter from './routes/chatroom.routes';
+import userRouter from './routes/user.routes';
+import mongoose from "mongoose";
+import dotenv from "dotenv";
+
+dotenv.config()
 
 const app = express();
-const port = 3000;
+const port = process.env.PORT;
 
-app.use(express.json());
+mongoose.connect(process.env.MONGO_URL, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true
+});
+
+app.use(logger("dev"));
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: false }));
+// app.use(express.json());
 
 app.use('/chatrooms', chatroomRouter);
+app.use('/users', userRouter);
 
 app.listen(port, ()=> {  
-    console.log('app is listening on port 3000');
+    console.log(`🍺 Server listening on port ${port}`);
 });
