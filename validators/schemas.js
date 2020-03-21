@@ -22,7 +22,8 @@ const chatroomValidator = Joi.object().keys({
   name: Joi.string()
     .max(60)
     .required(),
-  location: locationValidator
+  location: locationValidator,
+  visibility: Joi.string().valid(["PUBLIC", "PRIVATE"])
   // admin: Joi.objectId().required()
 });
 
@@ -43,10 +44,21 @@ const userLoginValidator = Joi.object().keys({
   password: Joi.string().required()
 });
 
+const chatroomRequestValidator = Joi.object().keys({
+  message: Joi.string().required()
+});
+
+const validateChatroomRequestValidator = Joi.object().keys({
+  request: Joi.objectId().required(),
+  status: Joi.string().required().valid(["ACCEPTED", "REJECTED"])
+});
+
 const schemas = {
-    Chatroom : chatroomValidator,
-    User: userValidator,
-    UserLogin: userLoginValidator
-}
+  Chatroom: chatroomValidator,
+  User: userValidator,
+  UserLogin: userLoginValidator,
+  ChatroomRequest: chatroomRequestValidator,
+  ValidateChatroomRequest: validateChatroomRequestValidator,
+};
 
 export default schemas;

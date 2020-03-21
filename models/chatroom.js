@@ -43,6 +43,11 @@ const chatroomSchema = new Schema({
     },
     participants: [chatroomRequest],
     messages: [chatroomMessage],
+    visibility: {
+        type: String,
+        enum: ['PUBLIC', 'PRIVATE'],
+        default: 'PRIVATE'
+    },
     location: {
         type: {
             type: String, 
@@ -56,6 +61,10 @@ const chatroomSchema = new Schema({
     }
 }, {
     timestamps: true
+});
+
+chatroomSchema.index({
+    location: '2dsphere'
 });
 
 export const Chatroom = mongoose.model('Chatroom', chatroomSchema);

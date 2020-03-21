@@ -1,7 +1,7 @@
 import userRepository from "../repositories/user.repository";
 import jwt from "jsonwebtoken";
 
-class AlreadyTakenError extends Error {
+export class AlreadyTakenError extends Error {
     constructor(message) {
         super(message);
         this.name = "AlreadyTakenError";
