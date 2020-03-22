@@ -1,5 +1,13 @@
 <template>
-  <v-app>
+  <div id="app">
+    <nav>
+        <router-link to='/'>Home</router-link>
+        <router-link to='/register'>Register</router-link>
+        <router-link to='/login'>Login</router-link>
+    </nav>
+    <router-view />
+  </div>
+  <!-- <v-app>
     <v-app-bar app color="primary" dark>
       <div class="d-flex align-center">
         <v-img
@@ -36,17 +44,17 @@
     <v-content>
       <HelloWorld />
     </v-content>
-  </v-app>
+  </v-app> -->
 </template>
 
 <script>
-import HelloWorld from "./components/HelloWorld";
+// import HelloWorld from "./components/HelloWorld";
 
 export default {
   name: "App",
 
   components: {
-    HelloWorld
+    // HelloWorld
   },
 
   data: () => ({
