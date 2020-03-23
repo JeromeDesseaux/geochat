@@ -5,14 +5,17 @@
         <h1 class="headline py-5 font-weight-light text-center">Connexion</h1>
         <p class="text-center font-weight-light caption">Pas de compte? <router-link to="/register">Enregistrez-vous</router-link></p>
         <v-form class="px-10 pb-10" 
-        ref="form"
-      v-model="valid"
-      :lazy-validation="false">
+            ref="form"
+            v-model="valid"
+            :lazy-validation="false"
+            @keyup.native.enter="valid && validate($event)"
+        >
           <v-text-field
             v-model="email"
             :rules="emailRules"
             label="Email"
             required
+            autofocus
           ></v-text-field>
           <v-text-field
             v-model="password"
@@ -23,9 +26,12 @@
           ></v-text-field>
           <v-btn
             block
-            dark
+            :light="!valid"
+            :dark="valid"
             color="brown lighten-2"
             class="mr-4 mt-5"
+            :disabled="!valid"
+            :loading="loading"
             @click="validate"
           >
             Connexion
@@ -39,6 +45,7 @@
 <script>
   export default {
     data: () => ({
+        loading: false,
         valid: false,
         email:"",
         password:"",
@@ -52,11 +59,22 @@
       ],
       passwordRules: [
         value => !!value || 'Champs requis.',
+        value => (value || '').length >= 6 || '6 caractères minimum',
       ],
     }),
     methods: {
         validate () {
-            this.$refs.form.validate()
+            this.loading = true;
+            const userData = {
+                email: this.email,
+                password: this.password
+            }
+            this.$store.dispatch('login', userData)
+            .then(() => {
+                this.loading=false;
+                this.$router.push('/');
+            })
+            .catch((err) => console.log(err));
         },
     }
   }

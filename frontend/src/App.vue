@@ -1,3 +1,4 @@
+
 <template>
   <v-app style="background: #f6f6f6;">
     <Menu /> 
@@ -20,6 +21,8 @@
 import Menu from "./components/Menu";
 
 export default {
+  /* eslint-disable */
+
   name: "App",
 
   components: {
@@ -30,6 +33,17 @@ export default {
 
   data: () => ({
     //
-  })
+  }),
+  created: function () {
+    this.$http.interceptors.response.use(undefined, function (err) {
+      return new Promise(function (resolve, reject) {
+        if (err.status === 401 && err.config && !err.config.__isRetryRequest) {
+          this.$store.dispatch("logout")
+        }
+        throw err;
+      });
+    });
+  }
 };
+/* eslint-enable */
 </script>

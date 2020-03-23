@@ -22,6 +22,7 @@
             :rules="usernameRules"
             label="Nom d'utilisateur"
             required
+            autofocus
           ></v-text-field>
           <v-text-field
             v-model="email"
@@ -64,12 +65,12 @@
           </div>
           <v-btn
             block
-            :light="!valid"
-            :dark="valid"
+            :light="!formValid"
+            :dark="formValid"
             color="brown lighten-2"
             class="mr-4 mt-5"
             @click="validate"
-            :disabled="!valid"
+            :disabled="!formValid"
           >
             Créer mon compte
           </v-btn>
@@ -124,42 +125,54 @@ export default {
     ],
     usernameRules: [
       value => !!value || "Champs requis.",
-      value => (value || '').length <= 30 || '30 charactères maximum',
+      value => (value || '').length <= 30 || '30 caractères maximum',
     ],
-    passwordRules: [value => !!value || "Champs requis."]
+    passwordRules: [
+        value => !!value || "Champs requis.",
+        value => (value || '').length >= 6 || '6 caractères minimum',
+    ]
   }),
   watch: {
     search: _.debounce(function (val) {
-            console.log(val);
-            this.isTyping = false;
-            this.querySelections(val);
-        }, 1500),
+        this.isTyping = false;
+        this.querySelections(val);
+    }, 1500),
     city: function() {
         this.location = this.city.centre.coordinates;
-        console.log(this.location);
     }
+  },
+  computed: {
+      formValid: function() {
+          if(this.location) {
+              if(this.location[0] != 0 && this.location[1] != 0){
+                  return this.valid;
+              }
+          }
+          return false;
+      }
   },
   methods: {
     validate() {
-      this.$refs.form.validate();
+        const userData = {
+            username: this.username,
+            password: this.password,
+            email: this.email,
+            location: {
+                type: "Point",
+                coordinates: this.location
+            }
+        };
+        console.log(userData);
+    //   this.$refs.form.validate();
     },
     querySelections(v) {
         const URL = `https://geo.api.gouv.fr/communes?nom=${v}&fields=nom,code,codesPostaux,centre,codeDepartement,codeRegion,population&format=json&geometry=centre`
       this.loading = true;
-
-      // Simulated ajax query
       axios.get(URL).then((result) => {
           const data = result.data;
-          this.items = data.map(function(city) { return {text: city.nom, value:city}});
-          console.log(this.items);
+          this.items = data.map(function(city) { return {text: `${city.nom} - ${city.codesPostaux[0]}`, value:city}});
           this.loading = false;
       })
-    //   setTimeout(() => {
-    //     this.items = this.states.filter(e => {
-    //       return (e || "").toLowerCase().indexOf((v || "").toLowerCase()) > -1;
-    //     });
-    //     this.loading = false;
-    //   }, 500);
     },
     async getLocation() {
       return new Promise((resolve, reject) => {

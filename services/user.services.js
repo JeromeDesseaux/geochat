@@ -12,7 +12,7 @@ export class AlreadyTakenError extends Error {
 const getJwt = (user) => {
     console.log(process.env.JWT_EXPIRES);
     const token = jwt.sign(
-      { username: user.username, id: user._id },
+      { username: user.username, id: user._id, coordinates: user.location.coordinates },
       process.env.JWT_SECRET,
       {
         expiresIn: parseInt(process.env.JWT_EXPIRES)

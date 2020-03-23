@@ -6,6 +6,7 @@ import userRouter from './routes/user.routes';
 import mongoose from "mongoose";
 import dotenv from "dotenv";
 import expressip from "express-ip";
+import cors from "cors";
 
 dotenv.config()
 
@@ -18,6 +19,7 @@ mongoose.connect(process.env.MONGO_URL, {
 });
 
 app.use(logger("dev"));
+app.use(cors());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(expressip().getIpInfoMiddleware);

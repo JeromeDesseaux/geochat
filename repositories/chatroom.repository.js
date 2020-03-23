@@ -43,7 +43,7 @@ class ChatroomRepository {
                             type: "Point",
                             coordinates: [long, lat]
                         }
-                    }
+                    },
                 }
             };
             if(name) {
