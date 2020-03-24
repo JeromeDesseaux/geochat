@@ -5,6 +5,8 @@ import Login from "../views/Login.vue";
 import Register from "../views/Register.vue";
 import ClosestChatrooms from "../views/ClosestChatrooms.vue";
 import CreateChatroom from "../views/CreateChatroom.vue";
+import MyChatrooms from "../views/MyChatrooms.vue";
+import MyRequests from "../views/MyRequests.vue";
 import store from "../store/index";
 
 Vue.use(VueRouter);
@@ -37,6 +39,22 @@ const routes = [
     path: "/salon/creer",
     name: "Create",
     component: CreateChatroom,
+    meta: {
+      requiresAuth: true
+    }
+  },
+  {
+    path: "/salons",
+    name: "MyChatrooms",
+    component: MyChatrooms,
+    meta: {
+      requiresAuth: true
+    }
+  },
+  {
+    path: "/demandes",
+    name: "MyRequests",
+    component: MyRequests,
     meta: {
       requiresAuth: true
     }

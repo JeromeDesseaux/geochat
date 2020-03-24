@@ -68,7 +68,8 @@
         items: [
           { title: 'Salons à proximité', icon: 'mdi-crosshairs-gps', path:"/closest" },
           { title: 'Créer un salon', icon: 'mdi-plus', path:"/salon/creer" },
-          { title: 'Mes salons', icon: 'mdi-email-newsletter', path:"/" },
+          { title: 'Mes salons', icon: 'mdi-email-newsletter', path:"/salons" },
+          { title: 'Mes demandes', icon: 'mdi-account-multiple-plus', path:"/demandes" },
           // { title: 'About', icon: 'mdi-help-box' },
         ],
         // mini: false,

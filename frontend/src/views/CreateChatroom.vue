@@ -6,6 +6,9 @@
         <p class="text-center font-weight-light body-2">
           Vous allez créer un nouveau salon: merci pour vos voisins. Certains en ont sûrement besoin 😍! Ce salon utilisera la localisation renseignée lors de votre inscription et sera disponible à toutes les personnes confinées proches de vous.
         </p>
+        <v-alert class="mx-10 my-5" type="error" text prominent v-if="error">
+          {{error}}
+        </v-alert>
         <v-form
           class="px-10 pb-10"
           ref="form"
@@ -55,10 +58,13 @@
 </template>
 
 <script>
+import config from "../config/config";
+
 export default {
   data: () => ({
     loading: false,
     status: "",
+    error: "",
     chatname: "",
     valid: false,
     chatroomRules: [
@@ -68,11 +74,27 @@ export default {
   }),
   methods: {
     validate() {
-      // this.loading = true;
-      // const userData = {
-      //     email: this.email,
-      //     password: this.password
-      // }
+      this.loading = true;
+      const chatroomData = {
+          name: this.chatname,
+          visibility: this.status,
+          location: {
+            type: "Point",
+            coordinates: this.user.coordinates
+          }
+      };
+      this.$http.post(`${config.API_URL}/chatrooms/create`, chatroomData)
+      .then(() => {
+        this.loading = false;
+        this.$router.push('/')
+      }).catch((err) => {
+        this.loading = false;
+        if(err.response.status===409){
+          this.error = "Un salon porte déjà ce nom. Veuillez lui en attribuer un autre.";
+        }else{
+          this.error = "Une erreur inconnue est survenue."
+        }
+      })
       // this.$store.dispatch('login', userData)
       // .then(() => {
       //     this.loading=false;
@@ -87,6 +109,9 @@ export default {
         }
         return info;
     }
+  },
+  computed:{
+    user: function(){return this.$store.getters.user}
   }
 };
 </script>

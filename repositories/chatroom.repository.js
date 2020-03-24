@@ -26,16 +26,26 @@ class ChatroomRepository {
                 "name" :{
                     "$regex": name, "$options": "i"
                 }
-            });
+            }).select("-messages");
         } catch (error) {
             return null;
         }
 
     }
 
-    async getByLocation(long, lat, distance, resPerPage, page, name) {
+    async getByLocation(userId, long, lat, distance, resPerPage, page, name) {
         try {
             let condition = {
+                admin: {
+                    $ne: userId
+                },
+                participants: {
+                    $not: {
+                        $elemMatch: {
+                            "user": userId,
+                        }
+                    }
+                },
                 location: {
                     $near: {
                         $maxDistance: distance,
@@ -56,10 +66,44 @@ class ChatroomRepository {
                 }
             }
             const total = await Chatroom.find(condition).count();
-            const chatrooms = await Chatroom.find(condition).skip((resPerPage * page) - resPerPage).limit(resPerPage);
+            const chatrooms = await Chatroom.find(condition).skip((resPerPage * page) - resPerPage).limit(resPerPage).select("-messages");
             return [total, chatrooms];
         } catch (error) {
             return null;
+        }
+    }
+
+    async getAllByUser(userId) {
+        try {
+            return await Chatroom.find({
+                $or: [
+                    {"admin": userId},
+                    {"participants": {
+                            $elemMatch: {
+                                "user": userId,
+                                "status": "ACCEPTED"
+                            }
+                        }
+                    }
+                ]
+            }).select("-messages");
+        } catch (error) {
+            return [];
+        }
+    }
+
+    async getRequestsByUser(userId, status) {
+        try {
+            return await Chatroom.find({
+                "participants": {
+                    $elemMatch: {
+                        "user": userId,
+                        "status": status
+                    }
+                }
+            }).select("-messages");
+        } catch (error) {
+            return [];
         }
     }
 

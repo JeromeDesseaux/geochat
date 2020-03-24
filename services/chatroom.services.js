@@ -47,9 +47,11 @@ class ChatroomService {
         try {
             let chatroom = await chatroomRepository.getById(chatroomId);
             if (chatroom) {
+                console.log(chatroom);
                 let existingRequest = chatroom.participants.filter((participant) => participant.user == userId);
                 if (existingRequest.length > 0) {
                     existingRequest.forEach(request => {
+                        console.log("removing");
                         chatroom.participants.id(request.id).remove();
                     });
                     chatroom.save();
@@ -80,8 +82,8 @@ class ChatroomService {
 
     }
 
-    async getClosest(long, lat, distance, resPerPage, page, name) {
-        return await chatroomRepository.getByLocation(long, lat, distance, resPerPage, page, name);
+    async getClosest(userId, long, lat, distance, resPerPage, page, name) {
+        return await chatroomRepository.getByLocation(userId, long, lat, distance, resPerPage, page, name);
     }
 
     async get(id) {
@@ -94,6 +96,14 @@ class ChatroomService {
 
     async removeUser() {
 
+    }
+    
+    async getMyChatrooms(userId) {
+        return await chatroomRepository.getAllByUser(userId);
+    }
+
+    async getMyRequests(userId, status){
+        return await chatroomRepository.getRequestsByUser(userId, status);
     }
 
 }

@@ -9,7 +9,9 @@ router.post('/create', [auth, validate(schemas.Chatroom)] ,ChatroomController.cr
 router.post('/request/:id', [auth, validate(schemas.ChatroomRequest)] ,ChatroomController.sendRequest)
 router.delete('/request/:id', [auth] ,ChatroomController.removeRequest)
 router.put('/request/:id', [auth, validate(schemas.ValidateChatroomRequest)] ,ChatroomController.validateRequest)
-router.get('/closest',ChatroomController.getClosest)
+router.get('/getmine', [auth], ChatroomController.getMyChatrooms)
+router.get('/requests', [auth], ChatroomController.getMyRequests)
+router.get('/closest', [auth], ChatroomController.getClosest)
 // router.get('/name/:name',ChatroomController.getClosest)
 router.get('/:id', ChatroomController.getChatroom)
 

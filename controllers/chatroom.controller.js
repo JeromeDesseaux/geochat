@@ -93,12 +93,26 @@ class ChatroomController {
         const [long, lat] = getLocationFromIP(req.ipInfo.ip);
         const name = req.query.name || null;
         const distance = req.query.distance || 1000;
+        var userId = req.user.id;
         try {
-            const [total, chatrooms] = await chatroomService.getClosest(long, lat, distance, resPerPage, page, name);
+            const [total, chatrooms] = await chatroomService.getClosest(userId, long, lat, distance, resPerPage, page, name);
             return res.json({total, resPerPage, page, chatrooms});
         } catch (error) {
             return res.json(error);
         }
+    }
+
+    async getMyChatrooms(req, res) {
+        var userId = req.user.id;
+        const chatrooms = await chatroomService.getMyChatrooms(userId);
+        return res.json(chatrooms);
+    }
+
+    async getMyRequests(req, res) {
+        var userId = req.user.id;
+        var status = req.query.status || "PENDING";
+        const chatrooms = await chatroomService.getMyRequests(userId, status);
+        return res.json(chatrooms);
     }
 
 }
