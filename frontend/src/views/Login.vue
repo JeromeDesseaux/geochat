@@ -3,7 +3,7 @@
     <v-layout justify-center>
       <v-card color="white" class="ma-5 pa-1" width="700">
         <h1 class="headline py-5 font-weight-light text-center">Connexion</h1>
-        <p class="text-center font-weight-light caption">Pas de compte? <router-link to="/register">Enregistrez-vous</router-link></p>
+        <p class="text-center font-weight-light caption">Pas de compte? <router-link to="/enregistrement">Enregistrez-vous</router-link></p>
         <v-alert class="mx-10 my-5" type="error" text prominent v-if="error">
           {{error}}
         </v-alert>
@@ -76,7 +76,7 @@
             this.$store.dispatch('login', userData)
             .then(() => {
                 this.loading=false;
-                this.$router.push('/');
+                this.$router.push("/salons/proches");
             })
             .catch(() => {
               this.loading=false;

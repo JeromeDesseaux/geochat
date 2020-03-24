@@ -48,7 +48,7 @@ class ChatroomRepository {
                 },
                 location: {
                     $near: {
-                        $maxDistance: distance,
+                        $maxDistance: distance * 1000,
                         $geometry: {
                             type: "Point",
                             coordinates: [long, lat]
@@ -104,6 +104,20 @@ class ChatroomRepository {
             }).select("-messages");
         } catch (error) {
             return [];
+        }
+    }
+
+    async delete(userId, chatroomId) {
+        try {
+            // console.log("here");
+            // console.log(userId);
+            // console.log(chatroomId);
+            // console.log(await Chatroom.findOne({_id: chatroomId, admin: userId}));
+            // return null;
+            return await Chatroom.findOneAndDelete({_id: chatroomId, admin: userId});
+        }catch(err) {
+            console.log(err);
+            return null;
         }
     }
 

@@ -86,7 +86,7 @@ export default {
       this.$http.post(`${config.API_URL}/chatrooms/create`, chatroomData)
       .then(() => {
         this.loading = false;
-        this.$router.push('/')
+        this.$router.push('/mes-salons')
       }).catch((err) => {
         this.loading = false;
         if(err.response.status===409){
@@ -95,12 +95,6 @@ export default {
           this.error = "Une erreur inconnue est survenue."
         }
       })
-      // this.$store.dispatch('login', userData)
-      // .then(() => {
-      //     this.loading=false;
-      //     this.$router.push('/');
-      // })
-      // .catch((err) => console.log(err));
     },
     getInfo() {
         let info = "Votre salon sera accessible à tous les participants qui le désirent sans validation de votre part."

@@ -106,6 +106,10 @@ class ChatroomService {
         return await chatroomRepository.getRequestsByUser(userId, status);
     }
 
+    async deleteChatroom(userId, chatroomId) {
+        return await chatroomRepository.delete(userId, chatroomId);
+    }
+
 }
 
 export default new ChatroomService();

@@ -90,7 +90,7 @@ class ChatroomController {
     async getClosest(req, res) {
         const resPerPage = parseInt(req.query.perPage) || 10; // results per page
         const page = parseInt(req.query.page) || 1; // Page
-        const [long, lat] = getLocationFromIP(req.ipInfo.ip);
+        const [long, lat] = req.user.coordinates;
         const name = req.query.name || null;
         const distance = req.query.distance || 1000;
         var userId = req.user.id;
@@ -113,6 +113,13 @@ class ChatroomController {
         var status = req.query.status || "PENDING";
         const chatrooms = await chatroomService.getMyRequests(userId, status);
         return res.json(chatrooms);
+    }
+
+    async deleteChatroom(req, res) {
+        var userId = req.user.id;
+        var chatroomId = req.params.id;
+        const chr = await chatroomService.deleteChatroom(userId, chatroomId);
+        return res.json(chr);
     }
 
 }

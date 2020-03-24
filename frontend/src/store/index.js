@@ -5,6 +5,7 @@ import Vuex from "vuex";
 import config from "@/config/config.js";
 import axios from "axios";
 import createPersistedState from "vuex-persistedstate";
+import router from '@/router/index'
 
 
 Vue.use(Vuex);
@@ -49,7 +50,6 @@ export default new Vuex.Store({
         })
           .then(resp => {
             const token = resp.data.token;
-            const user = JSON.parse(window.atob(token.split(".")[1]));
             localStorage.setItem("token", token);
             axios.defaults.headers.common["Authorization"] = token;
             commit("auth_success", {
@@ -75,10 +75,12 @@ export default new Vuex.Store({
         })
           .then(resp => {
             const token = resp.data.token;
-            const user = resp.data.user;
             localStorage.setItem("token", token);
             axios.defaults.headers.common["Authorization"] = token;
-            commit("auth_success", token, user);
+            commit("auth_success", {
+                token: token,
+                user: JSON.parse(window.atob(token.split(".")[1]))
+            });
             resolve(resp);
           })
           .catch(err => {
@@ -93,6 +95,7 @@ export default new Vuex.Store({
         commit("logout");
         localStorage.removeItem("token");
         delete axios.defaults.headers.common["Authorization"];
+        router.push('/');
         resolve();
       });
     }

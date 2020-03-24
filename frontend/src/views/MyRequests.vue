@@ -67,7 +67,7 @@
         </v-card-actions>
       </v-card>
     </div>
-    <v-dialog v-model="dialog" max-width="290">
+    <v-dialog v-model="dialog" max-width="500">
       <v-card>
         <v-card-title class="headline">Êtes-vous sûr?</v-card-title>
 
@@ -138,7 +138,6 @@ export default {
         this.toDelete = chatroom._id;
     },
     validateDelete: function() {
-        console.log("calling delete action on " + this.toDelete);
         this.dialog = false;
         this.loading = true;
         let url = `${config.API_URL}/chatrooms/request/${this.toDelete}`;

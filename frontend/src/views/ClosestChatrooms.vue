@@ -31,7 +31,7 @@
       <no-data
         v-if="chatrooms.length === 0"
         header="Oops! Petit problème 😅"
-        message="Il semblerait qu'il n'existe aucun salon à proximité pour le moment. Peut-être pourriez-vous en créer un?"
+        message="Il semblerait qu'il n'existe aucun salon non rejoint à proximité pour le moment. Peut-être pourriez-vous en créer un?"
         to="/salon/creer"
         action="Cliquez ici créer votre salon"
       />
@@ -118,7 +118,6 @@ export default {
       this.chatroomId = chatroom._id;
     },
     sendRequest: function() {
-      console.log(this.chatroomId);
       this.dialog = false;
       let url = `${config.API_URL}/chatrooms/request/${this.chatroomId}`;
       this.$http.post(url, {message: this.message}).then(() => {
@@ -137,8 +136,8 @@ export default {
     },
     getDistance: function(chatroom) {
       return (
-        1000 *
         parseInt(
+        1000 *
           distance(
             this.user.coordinates[1],
             this.user.coordinates[0],

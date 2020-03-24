@@ -18,17 +18,25 @@ const routes = [
     component: Home
   },
   {
-    path: "/login",
+    path: "/connexion",
     name: "Login",
     component: Login
   },
   {
-    path: "/register",
+    path: "/enregistrement",
     name: "Register",
     component: Register
   },
   {
-    path: "/closest",
+    path: "/mes-salons",
+    name: "MyChatrooms",
+    component: MyChatrooms,
+    meta: {
+      requiresAuth: true
+    }
+  },
+  {
+    path: "/salons/proches",
     name: "Closest",
     component: ClosestChatrooms,
     meta: {
@@ -44,14 +52,6 @@ const routes = [
     }
   },
   {
-    path: "/salons",
-    name: "MyChatrooms",
-    component: MyChatrooms,
-    meta: {
-      requiresAuth: true
-    }
-  },
-  {
     path: "/demandes",
     name: "MyRequests",
     component: MyRequests,
@@ -60,7 +60,7 @@ const routes = [
     }
   },
   {
-    path: "/about",
+    path: "/a-propos",
     name: "About",
     // route level code-splitting
     // this generates a separate chunk (about.[hash].js) for this route

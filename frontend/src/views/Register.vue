@@ -6,7 +6,7 @@
           Création de compte
         </h1>
         <p class="text-center font-weight-light caption">
-          Déjà enregistré? <router-link to="/login">connectez-vous</router-link>
+          Déjà enregistré? <router-link to="/connexion">connectez-vous</router-link>
         </p>
         <v-alert text outlined color="deep-orange" icon="mdi-fire" v-if="error" class="mx-5">
           {{ error }}
@@ -162,7 +162,15 @@ export default {
                 coordinates: this.location
             }
         };
-        console.log(userData);
+        this.$store.dispatch('register', userData)
+          .then(() => {
+              this.loading=false;
+              this.$router.push('/salons/proches');
+          })
+          .catch(() => {
+            this.loading=false;
+            this.error = "Identifiants incorrects."
+          });
     //   this.$refs.form.validate();
     },
     querySelections(v) {

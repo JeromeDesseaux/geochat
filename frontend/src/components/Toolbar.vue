@@ -9,14 +9,14 @@
       <v-spacer></v-spacer>
 
       <div id="loggedIn" v-if="!loggedIn">
-        <router-link to="/login" >
+        <router-link class="routerLink" to="/connexion" >
             <v-btn text color="brown lighten-2">
                 <!-- <v-icon>mdi-heart</v-icon> -->
                 Se connecter
             </v-btn>
         </router-link>
 
-        <router-link to="/register" >
+        <router-link class="routerLink" to="/enregistrement" >
           <v-btn text color="brown lighten-2">
             <!-- <v-icon>mdi-account</v-icon> -->
             Créer un compte
