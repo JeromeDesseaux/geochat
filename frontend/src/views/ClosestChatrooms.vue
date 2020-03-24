@@ -28,6 +28,13 @@
       v-if="loading"
     ></v-progress-linear>
     <div class="home" v-else>
+      <no-data
+        v-if="chatrooms.length === 0"
+        header="Oops! Petit problème 😅"
+        message="Il semblerait qu'il n'existe aucun salon à proximité pour le moment. Peut-être pourriez-vous en créer un?"
+        to="/salon/creer"
+        action="Cliquez ici créer votre salon"
+      />
       <v-card
         class="my-3"
         light
@@ -85,6 +92,7 @@
 <script>
 import config from "../config/config";
 import { distance } from "../utils/distance";
+import NoData from "../components/NoData";
 import _ from "lodash";
 
 export default {
@@ -182,7 +190,9 @@ export default {
         });
     }
   },
-  components: {},
+  components: {
+    "no-data": NoData
+  },
   mounted() {
     this.refreshChatrooms();
   },

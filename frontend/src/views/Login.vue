@@ -4,6 +4,9 @@
       <v-card color="white" class="ma-5 pa-1" width="700">
         <h1 class="headline py-5 font-weight-light text-center">Connexion</h1>
         <p class="text-center font-weight-light caption">Pas de compte? <router-link to="/register">Enregistrez-vous</router-link></p>
+        <v-alert class="mx-10 my-5" type="error" text prominent v-if="error">
+          {{error}}
+        </v-alert>
         <v-form class="px-10 pb-10" 
             ref="form"
             v-model="valid"
@@ -49,6 +52,7 @@
         valid: false,
         email:"",
         password:"",
+        error: "",
       emailRules: [
         value => !!value || 'Champs requis.',
         // value => (value || '').length <= 20 || 'Max 20 characters',
@@ -74,7 +78,10 @@
                 this.loading=false;
                 this.$router.push('/');
             })
-            .catch((err) => console.log(err));
+            .catch(() => {
+              this.loading=false;
+              this.error = "Identifiants incorrects."
+            });
         },
     }
   }
