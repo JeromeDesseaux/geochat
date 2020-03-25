@@ -29,13 +29,15 @@
         :key="index"
       >
         <v-card-title class="headline">{{ chatroom.name }}</v-card-title>
+        <v-card-subtitle class="caption" v-if="chatroom.participants.length > 0">{{ chatroom.participants.length }} participant(s)</v-card-subtitle>
 
-        <!-- <v-card-subtitle>
-          {{getParticipants(chatroom)}} participant(s) situé(s) à environ {{getDistance(chatroom)}} mètres de vous.
-        </v-card-subtitle> -->
+        <v-card-text class="red--text" v-if="chatroom.admin == user.id">
+         Vous avez 6 demandes à rejoindre ce salon en attente! Pensez à leur apporter une réponse via le lien "gérer les demandes" ci-dessous.
+        </v-card-text>
 
         <v-card-actions>
-          <v-btn text color="brown lighten-2">Rejoindre le salon</v-btn>
+          <v-btn text color="brown lighten-2" :to="getPath(chatroom)">Rejoindre le salon</v-btn>
+            <v-btn text color="green lighten-2" @click.stop="deleteDialog(chatroom)" v-if="chatroom.admin == user.id">Gérer les demandes</v-btn>
           <v-btn text color="red lighten-2" @click.stop="deleteDialog(chatroom)" v-if="chatroom.admin == user.id">Supprimer</v-btn>
           <v-btn text color="red lighten-2" @click.stop="deleteDialog(chatroom)" v-else>Quitter</v-btn>
         </v-card-actions>
@@ -83,6 +85,9 @@ export default {
     chatrooms: []
   }),
   methods: {
+      getPath: function(chatroom ) {
+          return "/salon/"+chatroom._id;
+      },
       deleteDialog: function(chatroom) {
           this.dialog = true;
           this.toDelete = chatroom;
@@ -110,6 +115,7 @@ export default {
         .get(url)
         .then(response => {
             this.chatrooms = response.data;
+            console.log(this.chatrooms);
             this.initData = response.data;
             this.loading = false;
         })

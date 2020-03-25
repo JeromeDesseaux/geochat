@@ -14,7 +14,7 @@
           ref="form"
           v-model="valid"
           :lazy-validation="false"
-          @keyup.native.enter="valid && validate($event)"
+          @keyup.native.enter="valid && validateForm()"
         >
           <v-text-field
             v-model="chatname"
@@ -23,6 +23,7 @@
             required
             autofocus
           ></v-text-field>
+          <v-text-field v-show="false"></v-text-field>
           <v-radio-group v-model="status" mandatory row>
             <template v-slot:label>
                 <div>Votre salon est :</div>
@@ -47,7 +48,7 @@
             class="mr-4 mt-5"
             :disabled="!valid"
             :loading="loading"
-            @click="validate"
+            @click="validateForm"
           >
             Créer le salon
           </v-btn>
@@ -73,28 +74,30 @@ export default {
     ]
   }),
   methods: {
-    validate() {
-      this.loading = true;
-      const chatroomData = {
-          name: this.chatname,
-          visibility: this.status,
-          location: {
-            type: "Point",
-            coordinates: this.user.coordinates
+    validateForm() {
+      if(this.valid){
+        this.loading = true;
+        const chatroomData = {
+            name: this.chatname,
+            visibility: this.status,
+            location: {
+              type: "Point",
+              coordinates: this.user.coordinates
+            }
+        };
+        this.$http.post(`${config.API_URL}/chatrooms/create`, chatroomData)
+        .then(() => {
+          this.loading = false;
+          this.$router.push('/mes-salons')
+        }).catch((err) => {
+          this.loading = false;
+          if(err.response.status===409){
+            this.error = "Un salon porte déjà ce nom. Veuillez lui en attribuer un autre.";
+          }else{
+            this.error = "Une erreur inconnue est survenue."
           }
-      };
-      this.$http.post(`${config.API_URL}/chatrooms/create`, chatroomData)
-      .then(() => {
-        this.loading = false;
-        this.$router.push('/mes-salons')
-      }).catch((err) => {
-        this.loading = false;
-        if(err.response.status===409){
-          this.error = "Un salon porte déjà ce nom. Veuillez lui en attribuer un autre.";
-        }else{
-          this.error = "Une erreur inconnue est survenue."
-        }
-      })
+        })
+      }
     },
     getInfo() {
         let info = "Votre salon sera accessible à tous les participants qui le désirent sans validation de votre part."

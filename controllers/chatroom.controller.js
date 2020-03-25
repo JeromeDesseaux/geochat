@@ -95,8 +95,8 @@ class ChatroomController {
         const distance = req.query.distance || 1000;
         var userId = req.user.id;
         try {
-            const [total, chatrooms] = await chatroomService.getClosest(userId, long, lat, distance, resPerPage, page, name);
-            return res.json({total, resPerPage, page, chatrooms});
+            const cr = await chatroomService.getClosest(userId, long, lat, distance, resPerPage, page, name);
+            return res.json(cr[0]);
         } catch (error) {
             return res.json(error);
         }

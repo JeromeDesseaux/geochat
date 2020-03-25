@@ -1,0 +1,81 @@
+<template>
+  <!-- <v-row v-if="isSender">
+    <v-col :cols="6"></v-col>
+    <v-col :cols="6" class="justify-space-between">
+        <div style="margin-left: auto">
+        </div>
+        <v-spacer></v-spacer>
+        <div id="content">
+            <v-card color="green lighten-5">
+                <v-card-text>
+                {{ message.message }}
+                </v-card-text>
+            </v-card>
+            <p class="caption ml-2">Username</p>
+        </div>
+    </v-col>
+  </v-row>
+  <v-row v-else>
+    <v-col cols="auto">
+      <v-card color="" width="100%">
+        <v-card-text>
+          {{ message.message }}
+        </v-card-text>
+      </v-card>
+        <p class="caption ml-2">Username</p>
+    </v-col>
+  </v-row> -->
+  <div :class="getClass()">
+    <v-card :color="getColor()" class="my-2" style="max-width: 80%">
+            <v-card-text>
+            {{ message.message }}
+            </v-card-text>
+        </v-card>
+  </div>
+</template>
+
+<script>
+export default {
+  props: ["message"],
+  data: () => ({
+      isSender: true
+  }),
+  methods: {
+    hasSentMessage: function() {
+        if(this.message.user) {
+            if(this.message.user === this.user.id) {
+                this.isSender = true
+                return true;
+            }
+        }
+        this.isSender = false;
+        return false;
+    },
+    getClass: function() {
+      return this.hasSentMessage() ? "d-flex justify-end" : "d-flex";
+    },
+    getColor: function() {
+      return this.hasSentMessage() ?  "green lighten-5" : "";
+    }
+    // getClass: function() {
+    //   let classe = "py-3 ";
+    //   console.log(this.isSender);
+    //   if (!this.message.user == this.user.id) {
+    //     classe += "justify-end";
+    //     return classe;
+    //   } else {
+    //     classe += "flex-row-reverse";
+    //   }
+    //   return classe;
+    // }
+  },
+  mounted() {
+      this.hasSentMessage()
+  },
+  computed: {
+    user: function() {
+      return this.$store.getters.user;
+    }
+  }
+}
+</script>

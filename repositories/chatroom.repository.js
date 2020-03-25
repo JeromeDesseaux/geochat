@@ -1,6 +1,7 @@
 import {
     Chatroom
 } from "../models/chatroom";
+import mongoose, { mongo } from "mongoose";
 
 class ChatroomRepository {
 
@@ -35,39 +36,104 @@ class ChatroomRepository {
 
     async getByLocation(userId, long, lat, distance, resPerPage, page, name) {
         try {
-            let condition = {
-                admin: {
-                    $ne: userId
-                },
-                participants: {
-                    $not: {
-                        $elemMatch: {
-                            "user": userId,
-                        }
-                    }
-                },
-                location: {
-                    $near: {
-                        $maxDistance: distance * 1000,
-                        $geometry: {
+            const namer = name || "";
+            let cr = await Chatroom.aggregate(
+            [
+                {
+                    "$geoNear": {
+                        "near": {
                             type: "Point",
                             coordinates: [long, lat]
+                        },
+                        "key": "location",
+                        "maxDistance": distance * 1000,
+                        "distanceField": "distance",
+                        "spherical": true
+                    }
+                },
+                {
+                    "$match": {
+                        $and: [{
+                                "participants.user": {
+                                    $ne: mongoose.Types.ObjectId(userId)
+                                }
+                            },
+                            {
+                                admin: {
+                                    $ne: mongoose.Types.ObjectId(userId)
+                                }
+                            },
+                            {
+                                name: {
+                                    "$regex": namer,
+                                    "$options": "i"
+                                }
+                            }
+                        ]
+                    }
+                },
+                {
+                "$project": {
+                    "name": 1,
+                    "admin": 1,
+                    "distance": 1,
+                    "participants": {
+                        $filter: {
+                            input: '$participants',
+                            as: 'participant',
+                            cond: {
+                                $and:[
+                                    {
+                                        "$eq": [
+                                            "$$participant.user",
+                                            userId
+                                        ],
+                                    },
+                                    {
+                                        "$eq": [
+                                            "$$participant.status",
+                                            "ACCEPTED"
+                                        ]
+                                    }
+
+                                ]
+                            }
                         }
                     },
-                }
-            };
-            if(name) {
-                condition = {
-                    ...condition,
-                    "name": {
-                        "$regex": name,
-                        "$options": "i"
+                    "visibility": 1,
+                    "location": 1,
+                    "createdAt": 1,
+                    "nbMessages": {
+                        "$size": "$messages"
+                    },
+                    "nbParticipants": {
+                        "$size": "$participants"
                     }
                 }
+            },
+            {
+                "$sort": {
+                    "nbParticipants": -1,
+                    "nbMessages": -1,
+                    "distance": -1,
+                    "createdAt": 1
+                }
+            },
+            {
+                $facet: {
+                    paginatedResults: [{
+                        $skip: (resPerPage * page) - resPerPage
+                    }, {
+                        $limit: resPerPage
+                    }],
+                    totalCount: [{
+                        $count: 'count'
+                    }]
+                }
             }
-            const total = await Chatroom.find(condition).count();
-            const chatrooms = await Chatroom.find(condition).skip((resPerPage * page) - resPerPage).limit(resPerPage).select("-messages");
-            return [total, chatrooms];
+                ],
+            );
+            return cr;
         } catch (error) {
             return null;
         }
@@ -86,7 +152,7 @@ class ChatroomRepository {
                         }
                     }
                 ]
-            }).select("-messages");
+            }).populate("participants.user").select("-messages");
         } catch (error) {
             return [];
         }
@@ -109,11 +175,6 @@ class ChatroomRepository {
 
     async delete(userId, chatroomId) {
         try {
-            // console.log("here");
-            // console.log(userId);
-            // console.log(chatroomId);
-            // console.log(await Chatroom.findOne({_id: chatroomId, admin: userId}));
-            // return null;
             return await Chatroom.findOneAndDelete({_id: chatroomId, admin: userId});
         }catch(err) {
             console.log(err);
