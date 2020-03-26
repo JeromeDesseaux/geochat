@@ -13,7 +13,7 @@ router.get('/getmine', [auth], ChatroomController.getMyChatrooms)
 router.get('/requests', [auth], ChatroomController.getMyRequests)
 router.get('/closest', [auth], ChatroomController.getClosest)
 // router.get('/name/:name',ChatroomController.getClosest)
-router.get('/:id', ChatroomController.getChatroom)
+router.get('/:id', [auth], ChatroomController.getChatroom)
 router.delete('/:id', [auth], ChatroomController.deleteChatroom)
 
 export default router;

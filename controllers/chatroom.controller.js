@@ -4,7 +4,8 @@ import {getLocationFromIP} from "../utils/iplookup";
 class ChatroomController {
 
     async getChatroom(req, res) {
-        const chatroom = await chatroomService.get(req.params.id);
+        var userId = req.user.id;
+        const chatroom = await chatroomService.get(req.params.id, userId);
         if(chatroom) {
             return res.status(200).json(chatroom);
         }

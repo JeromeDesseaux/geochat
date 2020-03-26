@@ -29,17 +29,43 @@
         :key="index"
       >
         <v-card-title class="headline">{{ chatroom.name }}</v-card-title>
-        <v-card-subtitle class="caption" v-if="chatroom.participants.length > 0">{{ chatroom.participants.length }} participant(s)</v-card-subtitle>
+        <v-card-subtitle class="caption" v-if="chatroom.participants.length > 0"
+          >{{ chatroom.participants.length }} participant(s)</v-card-subtitle
+        >
 
         <v-card-text class="red--text" v-if="chatroom.admin == user.id">
-         Vous avez 6 demandes à rejoindre ce salon en attente! Pensez à leur apporter une réponse via le lien "gérer les demandes" ci-dessous.
+            <requests-alert 
+                :chatroom="chatroom"
+                :to="{name: 'ChatroomParticipants', params: {id: chatroom._id}}"
+            />
+
         </v-card-text>
 
         <v-card-actions>
-          <v-btn text color="brown lighten-2" :to="getPath(chatroom)">Rejoindre le salon</v-btn>
-            <v-btn text color="green lighten-2" @click.stop="deleteDialog(chatroom)" v-if="chatroom.admin == user.id">Gérer les demandes</v-btn>
-          <v-btn text color="red lighten-2" @click.stop="deleteDialog(chatroom)" v-if="chatroom.admin == user.id">Supprimer</v-btn>
-          <v-btn text color="red lighten-2" @click.stop="deleteDialog(chatroom)" v-else>Quitter</v-btn>
+          <v-btn text color="brown lighten-2" :to="getPath(chatroom)"
+            >Rejoindre le salon</v-btn
+          >
+          <v-btn
+            text
+            color="green lighten-2"
+            v-if="chatroom.admin == user.id"
+            :to="{name: 'ChatroomParticipants', params: {id: chatroom._id}}"
+            >Gérer les participants</v-btn
+          >
+          <v-btn
+            text
+            color="red lighten-2"
+            @click.stop="deleteDialog(chatroom)"
+            v-if="chatroom.admin == user.id"
+            >Supprimer</v-btn
+          >
+          <v-btn
+            text
+            color="red lighten-2"
+            @click.stop="deleteDialog(chatroom)"
+            v-else
+            >Quitter</v-btn
+          >
         </v-card-actions>
       </v-card>
     </div>
@@ -48,7 +74,8 @@
         <v-card-title class="headline">Êtes-vous sûr?</v-card-title>
 
         <v-card-text v-if="toDelete.admin == user.id">
-          Cette action entraînera la suppression complète du salon et de ses messages de façon irréversible.
+          Cette action entraînera la suppression complète du salon et de ses
+          messages de façon irréversible.
         </v-card-text>
         <v-card-text v-else>
           Cette action est irréversible.
@@ -73,6 +100,7 @@
 <script>
 import config from "../config/config";
 import NoData from "../components/NoData";
+import RequestsAlert from "../components/RequestsAlert";
 
 export default {
   name: "Home",
@@ -80,55 +108,62 @@ export default {
     search: "",
     loading: true,
     dialog: false,
+    participantsChatroom: null,
+    participantsDialog: false,
     toDelete: "",
     initData: [],
     chatrooms: []
   }),
   methods: {
-      getPath: function(chatroom ) {
-          return "/salon/"+chatroom._id;
-      },
-      deleteDialog: function(chatroom) {
-          this.dialog = true;
-          this.toDelete = chatroom;
-      },
-      validateDelete: function() {
-          this.dialog = false;
-        this.loading = true;
-        let url = `${config.API_URL}/chatrooms/request/${this.toDelete._id}`;
-        if(this.toDelete.admin == this.user.id) {
-            url = `${config.API_URL}/chatrooms/${this.toDelete._id}`;
-        }
-        this.$http.delete(url)
+    getPath: function(chatroom) {
+      return "/salon/" + chatroom._id;
+    },
+    showDialog(chatroom){
+        this.participantsDialog = true;
+        this.participantsChatroom = chatroom;
+    },
+    deleteDialog: function(chatroom) {
+      this.dialog = true;
+      this.toDelete = chatroom;
+    },
+    validateDelete: function() {
+      this.dialog = false;
+      this.loading = true;
+      let url = `${config.API_URL}/chatrooms/request/${this.toDelete._id}`;
+      if (this.toDelete.admin == this.user.id) {
+        url = `${config.API_URL}/chatrooms/${this.toDelete._id}`;
+      }
+      this.$http
+        .delete(url)
         .then(() => {
-            this.loading = false;
-            this.refreshData();
+          this.loading = false;
+          this.refreshData();
         })
         .catch(() => {
           this.loading = false;
         });
-      },
-      refreshData: function() {
-        this.loading = true;
-        let url = `${config.API_URL}/chatrooms/getmine`;
-        this.$http
+    },
+    refreshData: function() {
+      this.loading = true;
+      let url = `${config.API_URL}/chatrooms/getmine`;
+      this.$http
         .get(url)
         .then(response => {
-            this.chatrooms = response.data;
-            console.log(this.chatrooms);
-            this.initData = response.data;
-            this.loading = false;
+          this.chatrooms = response.data;
+          this.initData = response.data;
+          this.loading = false;
         })
         .catch(() => {
-            this.loading = false;
+          this.loading = false;
         });
-      }
+    }
   },
   components: {
-    "no-data": NoData
+    "no-data": NoData,
+    "requests-alert": RequestsAlert
   },
   mounted() {
-      this.refreshData();
+    this.refreshData();
   },
   watch: {
     search: function() {

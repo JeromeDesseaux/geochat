@@ -86,9 +86,13 @@ class ChatroomService {
         return await chatroomRepository.getByLocation(userId, long, lat, distance, resPerPage, page, name);
     }
 
-    async get(id) {
+    async get(id, userId) {
         try {
-            return await chatroomRepository.getById(id);
+            const cr = await chatroomRepository.getById(id);
+            if (cr.admin == userId || cr.participants.filter(part => part.user == userId).length > 0) {
+                return cr;
+            }
+            return null;
         } catch (error) {
             return null;
         }
