@@ -15,7 +15,7 @@ class ChatroomRepository {
 
     async getById(id) {
         try {
-            return await Chatroom.findById(id);
+            return await Chatroom.findById(id).populate("participants.user").populate("messages.user").sort("messages.createdAt");
         } catch (error) {
             throw error;
         }
@@ -152,7 +152,7 @@ class ChatroomRepository {
                         }
                     }
                 ]
-            }).populate("participants.user").select("-messages");
+            }).populate("participants.user").select("-messages").sort({"participants": -1});
         } catch (error) {
             return [];
         }

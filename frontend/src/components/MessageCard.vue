@@ -27,35 +27,48 @@
   </v-row> -->
   <div :class="getClass()">
     <v-card :color="getColor()" class="my-2" style="max-width: 80%">
-            <v-card-text>
-            {{ message.message }}
-            </v-card-text>
-        </v-card>
+      <v-card-text>
+        <p class="caption">
+          {{ message.user.username }} le {{ getTime(message) }}
+        </p>
+        {{ message.message }}
+      </v-card-text>
+    </v-card>
   </div>
 </template>
 
 <script>
+import moment from 'moment'
+
 export default {
-  props: ["message"],
+  props: ['message'],
   data: () => ({
-      isSender: true
+    isSender: true
   }),
   methods: {
+    getTime: function(message) {
+      const dt = message.createdAt
+      if (dt) {
+        return moment(String(dt)).format('DD/MM/YYYY à hh:mm')
+      }
+      return ''
+    },
     hasSentMessage: function() {
-        if(this.message.user) {
-            if(this.message.user === this.user.id) {
-                this.isSender = true
-                return true;
-            }
+      if (this.message.user) {
+        const id = this.message.user._id || this.message.user.id
+        if (id === this.user.id) {
+          this.isSender = true
+          return true
         }
-        this.isSender = false;
-        return false;
+      }
+      this.isSender = false
+      return false
     },
     getClass: function() {
-      return this.hasSentMessage() ? "d-flex justify-end" : "d-flex";
+      return this.hasSentMessage() ? 'd-flex justify-end' : 'd-flex'
     },
     getColor: function() {
-      return this.hasSentMessage() ?  "green lighten-5" : "";
+      return this.hasSentMessage() ? 'green lighten-5' : ''
     }
     // getClass: function() {
     //   let classe = "py-3 ";
@@ -70,11 +83,11 @@ export default {
     // }
   },
   mounted() {
-      this.hasSentMessage()
+    this.hasSentMessage()
   },
   computed: {
     user: function() {
-      return this.$store.getters.user;
+      return this.$store.getters.user
     }
   }
 }

@@ -8,13 +8,13 @@ import Chatroom from "../views/Chatroom.vue";
 import CreateChatroom from "../views/CreateChatroom.vue";
 import MyChatrooms from "../views/MyChatrooms.vue";
 import ChatroomParticipants from "../views/ChatroomParticipants.vue";
+import PageNotFound from "../views/PageNotFound.vue";
 import MyRequests from "../views/MyRequests.vue";
 import store from "../store/index";
 
 Vue.use(VueRouter);
 
-const routes = [
-  {
+const routes = [{
     path: "/",
     name: "Home",
     component: Home
@@ -22,12 +22,18 @@ const routes = [
   {
     path: "/connexion",
     name: "Login",
-    component: Login
+    component: Login,
+    meta: {
+      requiresAnonymous: true
+    }
   },
   {
     path: "/enregistrement",
     name: "Register",
-    component: Register
+    component: Register,
+    meta: {
+      requiresAnonymous: true
+    }
   },
   {
     path: "/mes-salons",
@@ -84,7 +90,11 @@ const routes = [
     // this generates a separate chunk (about.[hash].js) for this route
     // which is lazy-loaded when the route is visited.
     component: () =>
-      import(/* webpackChunkName: "about" */ "../views/About.vue")
+      import( /* webpackChunkName: "about" */ "../views/About.vue")
+  },
+  {
+    path: "*",
+    component: PageNotFound
   }
 ];
 
@@ -100,6 +110,14 @@ router.beforeEach((to, from, next) => {
       return
     }
     next('/login')
+  } else {
+    next()
+  }
+})
+
+router.beforeEach((to, from, next) => {
+  if (to.matched.some(record => record.meta.requiresAnonymous)) {
+    next('/')
   } else {
     next()
   }

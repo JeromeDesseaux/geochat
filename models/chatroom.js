@@ -22,7 +22,8 @@ const chatroomRequest = new Schema({
 const chatroomMessage = new Schema({
     user:{
         type: ObjectId,
-        required: true
+        required: true,
+        ref: "User",
     },
     message: String
 },{

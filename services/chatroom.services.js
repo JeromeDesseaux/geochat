@@ -1,6 +1,7 @@
 import chatroomRepository from "../repositories/chatroom.repository";
 import {ChatroomRequest} from "../models/chatroom";
 import { AlreadyTakenError} from "./user.services";
+import mongoose from "mongoose";
 
 
 class ChatroomService {
@@ -47,11 +48,9 @@ class ChatroomService {
         try {
             let chatroom = await chatroomRepository.getById(chatroomId);
             if (chatroom) {
-                console.log(chatroom);
-                let existingRequest = chatroom.participants.filter((participant) => participant.user == userId);
+                let existingRequest = chatroom.participants.filter((participant) => participant.user.id == userId);
                 if (existingRequest.length > 0) {
                     existingRequest.forEach(request => {
-                        console.log("removing");
                         chatroom.participants.id(request.id).remove();
                     });
                     chatroom.save();
@@ -89,7 +88,7 @@ class ChatroomService {
     async get(id, userId) {
         try {
             const cr = await chatroomRepository.getById(id);
-            if (cr.admin == userId || cr.participants.filter(part => part.user == userId).length > 0) {
+            if (cr.admin == userId || cr.participants.filter(part => part.user._id == userId).length > 0) {
                 return cr;
             }
             return null;

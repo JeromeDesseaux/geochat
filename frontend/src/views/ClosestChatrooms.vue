@@ -7,7 +7,7 @@
             v-model="distance"
             :items="distances"
             label="Distance en kilomètres"
-            @change="refreshChatrooms"
+            @change="refresh"
             solo
           ></v-select>
         </v-col>
@@ -157,7 +157,6 @@ export default {
       return chatroom.nbParticipants + 1;
     },
     isParticipant: function(chatroom) {
-      console.log(chatroom);
       if (chatroom.admin == this.user.id) {
         return true;
       }
@@ -166,30 +165,6 @@ export default {
         return t.length > 0;
       }
       return false;
-    },
-    refreshChatrooms: function(page) {
-      console.log(page);
-      // const distance = this.distance || 10;
-      // this.loading = true;
-      // let url = `${config.API_URL}/chatrooms/closest?distance=${distance}`;
-      // if (this.search) {
-      //   url += `&name=${this.search}`;
-      // }
-      // if(page){
-      //   url += `&page=${page}`;
-      // }
-      // this.$http
-      //   .get(url)
-      //   .then(response => {
-      //     this.chatrooms = response.data.paginatedResults;
-      //     this.itemsPerPage = response.data.paginatedResults.length;
-      //     this.nbChatrooms = response.data.totalCount[0].count;
-      //     this.loading = false;
-      //   })
-      //   .catch(() => {
-      //     // console.log(err);
-      //     this.loading = false;
-      //   });
     },
     scroll: function($state) {
       this.state = $state;
@@ -220,60 +195,23 @@ export default {
                     this.busy = false;
                   });
           }, 1500);
-        // }else{
-          // console.log("hello");
-          // $state.complete();
-        // }
-      // window.onscroll = () => {
-      //   let bottomOfWindow = document.documentElement.scrollTop + window.innerHeight === document.documentElement.offsetHeight;
-      //   const distance = this.distance || 10;
-      //   if(bottomOfWindow && !this.busy) {
-      //     this.busy = true;
-      //     if(this.chatrooms.length < this.nbChatrooms){
-      //       const pageToFetch = this.currentPage + 1;
-      //       this.loading = true;
-      //       let url = `${config.API_URL}/chatrooms/closest?distance=${distance}&page=${pageToFetch}`;
-      //       if (this.search) {
-      //         url += `&name=${this.search}`;
-      //       }
-      //       this.$http
-      //         .get(url)
-      //         .then(response => {
-      //           this.chatrooms = this.chatrooms.concat(response.data.paginatedResults);
-      //           this.currentPage += 1;
-      //           this.loading = false;
-      //           this.busy = false;
-      //         })
-      //         .catch(() => {
-      //           // console.log(err);
-      //           this.loading = false;
-      //           this.busy = false;
-      //         });
-      //     }
-      //   }
-      // }
 
+    }, 
+    refresh: function() {
+      if(this.state) {
+        this.chatrooms = [];
+        this.currentPage = 0;
+        this.state.reset();
+      }
     }
   },
   components: {
     "no-data": NoData,
     InfiniteLoading
   },
-  mounted() {
-    // this.scroll();
-    // this.refreshChatrooms(1);
-  },
   watch: {
     search: _.debounce(function() {
-      if(this.state) {
-        this.chatrooms = [];
-        this.currentPage = 0;
-        this.state.reset();
-      }
-      // this.$refs.InfiniteLoading.stateChanger.reset(); 
-      // if(this.$refs.InfiniteLoading){
-      // }
-      // this.refreshChatrooms(1);
+      this.refresh();
     }, 1500)
   },
   computed: {
