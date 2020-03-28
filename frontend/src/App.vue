@@ -8,8 +8,8 @@
 </template>
 
 <script>
-import Menu from './components/Menu'
-const default_layout = 'default'
+import Menu from './components/Menu';
+const default_layout = 'default';
 
 export default {
   /* eslint-disable */

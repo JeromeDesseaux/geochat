@@ -60,7 +60,11 @@
             @click.stop="deleteDialog(chatroom)"
             >Quitter le salon</v-btn
           >
-          <v-btn text color="red lighten-1" v-else @click.stop="deleteDialog(chatroom)"
+          <v-btn
+            text
+            color="red lighten-1"
+            v-else
+            @click.stop="deleteDialog(chatroom)"
             >Supprimer ma demande</v-btn
           >
           <!-- <v-btn text v-else color="brown lighten-2">Demander à participer</v-btn> -->
@@ -92,35 +96,35 @@
 </template>
 
 <script>
-import config from "../config/config";
-import NoData from "../components/NoData";
+import config from '../config/config';
+import NoData from '../components/NoData';
 
 export default {
-  name: "Home",
+  name: 'Home',
   components: {
-    "no-data": NoData
+    'no-data': NoData
   },
   data: () => ({
-    search: "",
-    toDelete: "",
+    search: '',
+    toDelete: '',
     dialog: false,
     loading: true,
-    error: "",
+    error: '',
     statuses: [
       {
-        text: "En attente",
-        value: "PENDING"
+        text: 'En attente',
+        value: 'PENDING'
       },
       {
-        text: "Refusées",
-        value: "REJECTED"
+        text: 'Refusées',
+        value: 'REJECTED'
       },
       {
-        text: "Acceptées",
-        value: "ACCEPTED"
+        text: 'Acceptées',
+        value: 'ACCEPTED'
       }
     ],
-    status: "PENDING",
+    status: 'PENDING',
     initData: [],
     chatrooms: []
   }),
@@ -133,25 +137,24 @@ export default {
       return null;
     },
     deleteDialog: function(chatroom) {
-        // const request = this.getRequest(chatroom);
-        this.dialog = true;
-        this.toDelete = chatroom._id;
+      // const request = this.getRequest(chatroom);
+      this.dialog = true;
+      this.toDelete = chatroom._id;
     },
     validateDelete: function() {
-        this.dialog = false;
-        this.loading = true;
-        let url = `${config.API_URL}/chatrooms/request/${this.toDelete}`;
-        this.$http.delete(url)
+      this.dialog = false;
+      this.loading = true;
+      let url = `${config.API_URL}/chatrooms/request/${this.toDelete}`;
+      this.$http
+        .delete(url)
         .then(() => {
           this.loading = false;
           this.refreshChatrooms();
         })
         .catch(() => {
-            this.error = "Une erreur inconnue est survenue";
+          this.error = 'Une erreur inconnue est survenue';
           this.loading = false;
         });
-        
-        
     },
     refreshChatrooms: function() {
       this.loading = true;
@@ -163,8 +166,7 @@ export default {
           this.initData = response.data;
           this.loading = false;
         })
-        .catch(err => {
-          console.log(err);
+        .catch(() => {
           this.loading = false;
         });
     }

@@ -1,20 +1,16 @@
 <template>
-      <v-navigation-drawer
-        color="blue-grey darken-2"
-        clipped
-        app
-        :disable-resize-watcher="true"
-        permanent
-        :mini-variant="show"
-        fixed
-        dark
-      >
-        <v-list
-          dense
-          nav
-          class="py-5"
-        >
-          <!-- <v-list-item two-line class='px-0'>
+  <v-navigation-drawer
+    color="blue-grey darken-2"
+    clipped
+    app
+    :disable-resize-watcher="true"
+    permanent
+    :mini-variant="show"
+    fixed
+    dark
+  >
+    <v-list dense nav class="py-5">
+      <!-- <v-list-item two-line class='px-0'>
             <v-list-item-avatar>
               <img src="https://randomuser.me/api/portraits/men/81.jpg">
             </v-list-item-avatar>
@@ -34,51 +30,61 @@
         </v-btn>
           </v-list-item> -->
 
-          <!-- <v-divider></v-divider> -->
+      <!-- <v-divider></v-divider> -->
 
-          <v-list-item
-            v-for="item in items"
-            :key="item.title"
-            :to="item.path"
-            link
-          >
-            <v-list-item-icon>
-              <v-icon>{{ item.icon }}</v-icon>
-            </v-list-item-icon>
+      <v-list-item v-for="item in items" :key="item.title" :to="item.path" link>
+        <v-list-item-icon>
+          <v-icon>{{ item.icon }}</v-icon>
+        </v-list-item-icon>
 
-            <v-list-item-content>
-              <v-list-item-title>{{ item.title }}</v-list-item-title>
-            </v-list-item-content>
-          </v-list-item>
-          
-        </v-list>
-        <!-- <template v-slot:append>
+        <v-list-item-content>
+          <v-list-item-title>{{ item.title }}</v-list-item-title>
+        </v-list-item-content>
+      </v-list-item>
+    </v-list>
+    <!-- <template v-slot:append>
           <div class="pa-2">
             <v-btn block>Logout</v-btn>
           </div>
         </template> -->
-      </v-navigation-drawer>
+  </v-navigation-drawer>
 </template>
 
 <script>
-  export default {
-    props: ['show'],
-    data () {
-      return {
-        items: [
-          { title: 'Mes conversations', icon: 'mdi-email-newsletter', path:"/mes-salons" },
-          { title: 'Rechercher à proximité', icon: 'mdi-magnify', path:"/salons/proches" },
-          { title: 'Créer une conversation', icon: 'mdi-plus', path:"/salon/creer" },
-          { title: 'Suivre mes demandes', icon: 'mdi-account-multiple-plus', path:"/demandes" },
-          // { title: 'About', icon: 'mdi-help-box' },
-        ],
-        // mini: false,
-      }
-    },
-    computed:{
-      user: function(){ 
-        console.log(this.$store.getters.user);
-        return this.$store.getters.user}
+export default {
+  props: ['show'],
+  data() {
+    return {
+      items: [
+        {
+          title: 'Mes conversations',
+          icon: 'mdi-email-newsletter',
+          path: '/mes-salons'
+        },
+        {
+          title: 'Rechercher à proximité',
+          icon: 'mdi-magnify',
+          path: '/salons/proches'
+        },
+        {
+          title: 'Créer une conversation',
+          icon: 'mdi-plus',
+          path: '/salon/creer'
+        },
+        {
+          title: 'Suivre mes demandes',
+          icon: 'mdi-account-multiple-plus',
+          path: '/demandes'
+        }
+        // { title: 'About', icon: 'mdi-help-box' },
+      ]
+      // mini: false,
+    };
+  },
+  computed: {
+    user: function() {
+      return this.$store.getters.user;
     }
   }
+};
 </script>

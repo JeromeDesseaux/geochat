@@ -72,7 +72,6 @@ export default new Vuex.Store({
     }, user) {
       return new Promise((resolve, reject) => {
         commit("auth_request");
-        console.log(user);
         axios({
             url: `${config.API_URL}/users/register`,
             data: user,
