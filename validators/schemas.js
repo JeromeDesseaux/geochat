@@ -16,7 +16,7 @@ const locationValidator = Joi.object()
       .max(90)
       .required()
     ]).required()
-  })//.required()
+  }) //.required()
 
 const chatroomValidator = Joi.object().keys({
   name: Joi.string()
@@ -29,11 +29,10 @@ const chatroomValidator = Joi.object().keys({
 
 const userValidator = Joi.object().keys({
   username: Joi.string()
-    .alphanum()
     .max(30)
     .required(),
   email: Joi.string().email().required(),
-  password: Joi.string().alphanum().required(),
+  password: Joi.string().required(),
   location: locationValidator
 });
 

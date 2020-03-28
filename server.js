@@ -8,7 +8,9 @@ import dotenv from "dotenv";
 import expressip from "express-ip";
 import cors from "cors";
 import chatroomRepository from "./repositories/chatroom.repository";
-import { ChatroomMessage } from './models/chatroom';
+import {
+    ChatroomMessage
+} from './models/chatroom';
 
 
 dotenv.config()
@@ -27,7 +29,9 @@ mongoose.connect(process.env.MONGO_URL, {
 app.use(logger("dev"));
 app.use(cors());
 app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.urlencoded({
+    extended: false
+}));
 app.use(expressip().getIpInfoMiddleware);
 // app.use(express.json());
 
@@ -44,8 +48,7 @@ io.on('connection', function (client) {
     client.on('sendmessage', async function (data) {
         try {
             const cr = await chatroomRepository.getById(data.chatroom);
-            if(cr.admin == data.user.id || cr.participants.filter(part => part.user.id == data.user.id && part.status === "ACCEPTED").length > 0) 
-            {
+            if (cr.admin == data.user.id || cr.participants.filter(part => part.user.id == data.user.id && part.status === "ACCEPTED").length > 0) {
                 let message = new ChatroomMessage({
                     user: data.user.id,
                     message: data.message
@@ -60,6 +63,6 @@ io.on('connection', function (client) {
     });
 });
 
-server.listen(port, ()=> {  
+server.listen(port, () => {
     console.log(`🍺 Server listening on port ${port}`);
 });

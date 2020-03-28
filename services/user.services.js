@@ -10,13 +10,14 @@ export class AlreadyTakenError extends Error {
 }
 
 const getJwt = (user) => {
-    console.log(process.env.JWT_EXPIRES);
-    const token = jwt.sign(
-      { username: user.username, id: user._id, coordinates: user.location.coordinates },
-      process.env.JWT_SECRET,
-      {
-        expiresIn: parseInt(process.env.JWT_EXPIRES)
-      }
+    const token = jwt.sign({
+            username: user.username,
+            id: user._id,
+            coordinates: user.location.coordinates
+        },
+        process.env.JWT_SECRET, {
+            expiresIn: parseInt(process.env.JWT_EXPIRES)
+        }
     );
     return token;
 }
@@ -24,9 +25,13 @@ const getJwt = (user) => {
 class UserService {
     async login(email, password) {
         const user = await userRepository.getByEmail(email);
-        if(user == null){throw "Unknown email";}
-        if(await user.comparePassword(password)) {
-            return {token: getJwt(user)};
+        if (user == null) {
+            throw "Unknown email";
+        }
+        if (await user.comparePassword(password)) {
+            return {
+                token: getJwt(user)
+            };
         }
         return null;
     }
@@ -34,10 +39,16 @@ class UserService {
     async register(user) {
         try {
             const userDb = await userRepository.create(user);
-            return { token: getJwt(userDb) };
+            return {
+                token: getJwt(userDb)
+            };
         } catch (error) {
-            if (error.keyValue.email) {throw new AlreadyTakenError("EMAIL_TAKEN")}
-            if (error.keyValue.username) {throw new AlreadyTakenError("USERNAME_TAKEN")}
+            if (error.keyValue.email) {
+                throw new AlreadyTakenError("EMAIL_TAKEN")
+            }
+            if (error.keyValue.username) {
+                throw new AlreadyTakenError("USERNAME_TAKEN")
+            }
             throw error;
         }
     }
