@@ -13,7 +13,6 @@
     </v-toolbar-title>
 
     <v-spacer></v-spacer>
-
     <div id="loggedIn" v-if="!loggedIn">
       <router-link class="routerLink" to="/connexion">
         <v-btn text color="brown lighten-2">
@@ -29,6 +28,7 @@
         </v-btn>
       </router-link>
     </div>
+
     <div id="logout" v-else>
       <v-btn text color="brown lighten-2" @click="logout">
         <!-- <v-icon>mdi-heart</v-icon> -->

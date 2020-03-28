@@ -18,7 +18,7 @@
       <no-data
         v-if="chatrooms.length === 0"
         header="Oops! Petit problème 😅"
-        message="Il semblerait que nous n'ayez rejoint aucun salon pour le moment."
+        message="Il semblerait que vous n'ayez rejoint aucun salon pour le moment."
         to="/salons/proches"
         action="Cliquez ici pour rechercher des salons proches de chez vous!"
       />
@@ -34,11 +34,10 @@
         >
 
         <v-card-text class="red--text" v-if="chatroom.admin == user.id">
-            <requests-alert 
-                :chatroom="chatroom"
-                :to="{name: 'ChatroomParticipants', params: {id: chatroom._id}}"
-            />
-
+          <requests-alert
+            :chatroom="chatroom"
+            :to="{ name: 'ChatroomParticipants', params: { id: chatroom._id } }"
+          />
         </v-card-text>
 
         <v-card-actions>
@@ -49,7 +48,7 @@
             text
             color="green lighten-2"
             v-if="chatroom.admin == user.id"
-            :to="{name: 'ChatroomParticipants', params: {id: chatroom._id}}"
+            :to="{ name: 'ChatroomParticipants', params: { id: chatroom._id } }"
             >Gérer les participants</v-btn
           >
           <v-btn
@@ -98,29 +97,29 @@
 </template>
 
 <script>
-import config from "../config/config";
-import NoData from "../components/NoData";
-import RequestsAlert from "../components/RequestsAlert";
+import config from '../config/config';
+import NoData from '../components/NoData';
+import RequestsAlert from '../components/RequestsAlert';
 
 export default {
-  name: "Home",
+  name: 'Home',
   data: () => ({
-    search: "",
+    search: '',
     loading: true,
     dialog: false,
     participantsChatroom: null,
     participantsDialog: false,
-    toDelete: "",
+    toDelete: '',
     initData: [],
     chatrooms: []
   }),
   methods: {
     getPath: function(chatroom) {
-      return "/salon/" + chatroom._id;
+      return '/salon/' + chatroom._id;
     },
-    showDialog(chatroom){
-        this.participantsDialog = true;
-        this.participantsChatroom = chatroom;
+    showDialog(chatroom) {
+      this.participantsDialog = true;
+      this.participantsChatroom = chatroom;
     },
     deleteDialog: function(chatroom) {
       this.dialog = true;
@@ -159,8 +158,8 @@ export default {
     }
   },
   components: {
-    "no-data": NoData,
-    "requests-alert": RequestsAlert
+    'no-data': NoData,
+    'requests-alert': RequestsAlert
   },
   mounted() {
     this.refreshData();
