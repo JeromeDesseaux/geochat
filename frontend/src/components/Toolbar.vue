@@ -1,54 +1,67 @@
 <template>
-    <v-app-bar app fixed clipped-left color="white">
-      <v-app-bar-nav-icon @click="showDrawer" v-if="loggedIn"></v-app-bar-nav-icon>
+  <v-app-bar app fixed clipped-left color="white">
+    <v-app-bar-nav-icon
+      @click="showDrawer"
+      v-if="loggedIn"
+    ></v-app-bar-nav-icon>
 
-          <v-toolbar-title>
-                  <v-btn color="brown lighten-2" text to="/">Geochat</v-btn>
-          </v-toolbar-title>
+    <v-toolbar-title class="brown--text">
+      <!-- <router-link to="/" class="toolbar-title"> -->
+      <!-- Geochat -->
+      <v-btn
+        flat
+        depressed
+        color="brown lighten-2"
+        text
+        to="/"
+        exact
+        exact-active-class=""
+        >Geochat</v-btn
+      >
+      <!-- </router-link> -->
+    </v-toolbar-title>
 
-      <v-spacer></v-spacer>
+    <v-spacer></v-spacer>
 
-      <div id="loggedIn" v-if="!loggedIn">
-        <router-link class="routerLink" to="/connexion" >
-            <v-btn text color="brown lighten-2">
-                <!-- <v-icon>mdi-heart</v-icon> -->
-                Se connecter
-            </v-btn>
-        </router-link>
-
-        <router-link class="routerLink" to="/enregistrement" >
-          <v-btn text color="brown lighten-2">
-            <!-- <v-icon>mdi-account</v-icon> -->
-            Créer un compte
-          </v-btn>
-        </router-link>
-      </div>
-      <div id="logout" v-else>
-        <v-btn text color="brown lighten-2" @click="logout">
-            <!-- <v-icon>mdi-heart</v-icon> -->
-            Déconnexion
+    <div id="loggedIn" v-if="!loggedIn">
+      <router-link class="routerLink" to="/connexion">
+        <v-btn text color="brown lighten-2">
+          <!-- <v-icon>mdi-heart</v-icon> -->
+          Se connecter
         </v-btn>
-      </div>
+      </router-link>
 
-      
-    </v-app-bar>
+      <router-link class="routerLink" to="/enregistrement">
+        <v-btn text color="brown lighten-2">
+          <!-- <v-icon>mdi-account</v-icon> -->
+          Créer un compte
+        </v-btn>
+      </router-link>
+    </div>
+    <div id="logout" v-else>
+      <v-btn text color="brown lighten-2" @click="logout">
+        <!-- <v-icon>mdi-heart</v-icon> -->
+        Déconnexion
+      </v-btn>
+    </div>
+  </v-app-bar>
 </template>
 
 <script>
 export default {
   props: ['loggedIn'],
-  data () {
+  data() {
     return {
-      drawer: false,
+      drawer: false
     }
   },
   methods: {
     showDrawer() {
-      this.drawer = !this.drawer;
-      this.$emit("show-drawer", this.drawer);
+      this.drawer = !this.drawer
+      this.$emit('show-drawer', this.drawer)
     },
     logout() {
-      this.$store.dispatch('logout');
+      this.$store.dispatch('logout')
     }
   }
 }
@@ -57,5 +70,9 @@ export default {
 <style lang="stylus">
 * {
     font-family: Roboto;
+}
+.toolbar-title {
+  color: inherit;
+  text-decoration: inherit;
 }
 </style>
