@@ -8,16 +8,7 @@
     <v-toolbar-title class="brown--text">
       <!-- <router-link to="/" class="toolbar-title"> -->
       <!-- Geochat -->
-      <v-btn
-        flat
-        depressed
-        color="brown lighten-2"
-        text
-        to="/"
-        exact
-        exact-active-class=""
-        >Geochat</v-btn
-      >
+      <v-btn depressed color="brown lighten-2" text to="/" exact>Geochat</v-btn>
       <!-- </router-link> -->
     </v-toolbar-title>
 
@@ -53,18 +44,18 @@ export default {
   data() {
     return {
       drawer: false
-    }
+    };
   },
   methods: {
     showDrawer() {
-      this.drawer = !this.drawer
-      this.$emit('show-drawer', this.drawer)
+      this.drawer = !this.drawer;
+      this.$emit('show-drawer', this.drawer);
     },
     logout() {
-      this.$store.dispatch('logout')
+      this.$store.dispatch('logout');
     }
   }
-}
+};
 </script>
 
 <style lang="stylus">

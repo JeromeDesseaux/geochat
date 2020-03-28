@@ -40,14 +40,16 @@ export default new Vuex.Store({
     }
   },
   actions: {
-    login({ commit }, user) {
+    login({
+      commit
+    }, user) {
       return new Promise((resolve, reject) => {
         commit("auth_request");
         axios({
-          url: `${config.API_URL}/users/login`,
-          data: user,
-          method: "POST"
-        })
+            url: `${config.API_URL}/users/login`,
+            data: user,
+            method: "POST"
+          })
           .then(resp => {
             const token = resp.data.token;
             localStorage.setItem("token", token);
@@ -65,21 +67,24 @@ export default new Vuex.Store({
           });
       });
     },
-    register({ commit }, user) {
+    register({
+      commit
+    }, user) {
       return new Promise((resolve, reject) => {
         commit("auth_request");
+        console.log(user);
         axios({
-          url: `${config.API_URL}/users/register`,
-          data: user,
-          method: "POST"
-        })
+            url: `${config.API_URL}/users/register`,
+            data: user,
+            method: "POST"
+          })
           .then(resp => {
             const token = resp.data.token;
             localStorage.setItem("token", token);
             axios.defaults.headers.common["Authorization"] = token;
             commit("auth_success", {
-                token: token,
-                user: JSON.parse(window.atob(token.split(".")[1]))
+              token: token,
+              user: JSON.parse(window.atob(token.split(".")[1]))
             });
             resolve(resp);
           })
@@ -90,7 +95,9 @@ export default new Vuex.Store({
           });
       });
     },
-    logout({ commit }) {
+    logout({
+      commit
+    }) {
       return new Promise((resolve, reject) => {
         commit("logout");
         localStorage.removeItem("token");
