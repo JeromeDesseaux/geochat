@@ -61,7 +61,8 @@ export default {
         chatroom: this.$route.params.id,
         user: this.$store.getters.user
       };
-      this.messages.push(message);
+      const now = new Date();
+      this.messages.push({ ...message, createdAt: now.toJSON() });
       this.socket.emit('sendmessage', message);
       this.message = '';
     },
